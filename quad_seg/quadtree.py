@@ -45,9 +45,9 @@ class QuadTree(object):
         rect_img = self.ychan[rect.l:rect.l+rect.nrows, rect.c:rect.c+rect.ncols]
         if rect_img.max() - rect_img.min() > 0.25 and rect.nrows > 4 and rect.ncols > 4:
             node.NW = QuadTreeNode(Quad(rect.l, rect.c, rect.nrows // 2, rect.ncols // 2))
-            node.NE = QuadTreeNode(Quad(rect.l + rect.nrows // 2, rect.c, rect.nrows // 2, rect.ncols // 2))
-            node.SW = QuadTreeNode(Quad(rect.l, rect.c + rect.ncols // 2, rect.nrows // 2, rect.ncols // 2))
-            node.SE = QuadTreeNode(Quad(rect.l + rect.nrows // 2, rect.c + rect.ncols // 2, rect.nrows // 2, rect.ncols // 2))
+            node.NE = QuadTreeNode(Quad(rect.l + rect.nrows // 2, rect.c, rect.nrows - rect.nrows // 2, rect.ncols // 2))
+            node.SW = QuadTreeNode(Quad(rect.l, rect.c + rect.ncols // 2, rect.nrows // 2, rect.ncols - rect.ncols // 2))
+            node.SE = QuadTreeNode(Quad(rect.l + rect.nrows // 2, rect.c + rect.ncols // 2, rect.nrows - rect.nrows // 2, rect.ncols - rect.ncols // 2))
 
             self._constructRec(node.NW)
             self._constructRec(node.NE)
