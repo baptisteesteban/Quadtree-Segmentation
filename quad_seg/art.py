@@ -1,6 +1,10 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from imageio import imsave
+
 from queue import SimpleQueue
+import os
+from shutil import rmtree
 
 from .quadtree import QuadTree
 
@@ -11,7 +15,11 @@ class QuadTreeArt(object):
         self.quadtree = QuadTree(self.img, None)
         self.quadtree.construct()
 
-    def makeArt(self, save=False):
+    def makeArt(self, save=True):
+        if os.path.exists("res_img"):
+            rmtree("res_img")
+        os.mkdir("res_img")
+        i = 0
         to_show = np.zeros(self.img.shape, dtype=np.uint8)
         q = SimpleQueue()
         q.put(self.quadtree.root)
@@ -21,6 +29,9 @@ class QuadTreeArt(object):
             if node is None:
                 plt.imshow(to_show)
                 plt.pause(1)
+                if save:
+                    imsave("res_img/img" + str(i) + ".png", to_show)
+                    i += 1
                 if q.empty():
                     return
                 else:
