@@ -33,17 +33,19 @@ class QuadTree(object):
     """
     QuadTree structure
     """
-    def __init__(self, img, criterion):
+    def __init__(self, img, criterion=None, min_nrows=4, min_ncols=4):
         self.img = img
-        self.criterion = criterion
+        self.criterion = criterion if criterion is not None else lambda img: img.max() - img.min() > 0.25
         self.root = None
         self.ychan = rgb2yuv(img)[:, :, 0]
         self.ychan = (self.ychan - self.ychan.min()) / (self.ychan.max() - self.ychan.min())
-
+        self.min_nrows = min_nrows
+        self.min_ncols = min_ncols
+        
     def _constructRec(self, node):
         rect = node.rect
         rect_img = self.ychan[rect.l:rect.l+rect.nrows, rect.c:rect.c+rect.ncols]
-        if rect_img.max() - rect_img.min() > 0.25 and rect.nrows > 4 and rect.ncols > 4:
+        if self.criterion(rect_img) and rect.nrows > self.min_nrows and rect.ncols > self.min_ncols:
             node.NW = QuadTreeNode(Quad(rect.l, rect.c, rect.nrows // 2, rect.ncols // 2))
             node.NE = QuadTreeNode(Quad(rect.l + rect.nrows // 2, rect.c, rect.nrows - rect.nrows // 2, rect.ncols // 2))
             node.SW = QuadTreeNode(Quad(rect.l, rect.c + rect.ncols // 2, rect.nrows // 2, rect.ncols - rect.ncols // 2))

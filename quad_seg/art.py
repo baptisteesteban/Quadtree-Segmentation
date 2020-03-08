@@ -10,15 +10,16 @@ from .quadtree import QuadTree
 
 
 class QuadTreeArt(object):
-    def __init__(self, img):
+    def __init__(self, img, min_nrows, min_ncols):
         self.img = img
-        self.quadtree = QuadTree(self.img, None)
+        self.quadtree = QuadTree(self.img, None, min_nrows, min_ncols)
         self.quadtree.construct()
 
     def makeArt(self, save=True):
-        if os.path.exists("res_img"):
-            rmtree("res_img")
-        os.mkdir("res_img")
+        if save:
+            if os.path.exists("res_img"):
+                rmtree("res_img")
+            os.mkdir("res_img")
         i = 0
         to_show = np.zeros(self.img.shape, dtype=np.uint8)
         q = SimpleQueue()
